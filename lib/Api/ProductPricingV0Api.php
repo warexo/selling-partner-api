@@ -145,7 +145,7 @@ class ProductPricingV0Api
      */
     public function getCompetitivePricingWithHttpInfo($marketplace_id, $item_type, $asins = null, $skus = null, $customer_type = null)
     {
-        $request = $this->getCompetitivePricingRequest($marketplace_id, $item_type, $asins, $skus, $customer_type);
+        $request = $this->getCompetitivePricing2022Request($marketplace_id, $item_type, $asins, $skus, $customer_type);
         $signedRequest = $this->config->signRequest(
             $request
         );
@@ -195,7 +195,7 @@ class ProductPricingV0Api
                     } else {
                         $content = (string) $responseBody;
                     }
-
+                    return json_decode($content);
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\ProductPricingV0\GetPricingResponse', $response->getHeaders());
                 case 400:
                     if ('\SellingPartnerApi\Model\ProductPricingV0\GetPricingResponse' === '\SplFileObject') {
@@ -547,6 +547,102 @@ class ProductPricingV0Api
         $query = \GuzzleHttp\Psr7\Query::build($queryParams);
         return new Request(
             'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    public function getCompetitivePricing2022Request($marketplace_id, $item_type, $asins = null, $skus = null, $customer_type = null)
+    {
+        // verify the required parameter 'marketplace_id' is set
+        if ($marketplace_id === null || (is_array($marketplace_id) && count($marketplace_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $marketplace_id when calling getCompetitivePricing'
+            );
+        }
+        // verify the required parameter 'item_type' is set
+        
+        if ($asins !== null && count($asins) > 20) {
+            throw new \InvalidArgumentException('invalid value for "$asins" when calling ProductPricingV0Api.getCompetitivePricing, number of items must be less than or equal to 20.');
+        }
+
+
+        $resourcePath = '/batches/products/pricing/2022-05-01/items/competitiveSummary';
+        $requests = [];
+        foreach ($asins as $asin)
+        {
+            $requests[] = [
+                'asin' => $asin,
+                'marketplaceId' => $marketplace_id,
+                "method" => "GET",
+                "uri" => '/products/pricing/2022-05-01/items/competitiveSummary',
+                'includedData' => ['featuredBuyingOptions','referencePrices','lowestPricedOffers']
+            ];
+        }
+        $formParams = [
+            'requests' => $requests
+        ];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        
+        // query params
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json' || true) {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\Query::build($formParams);
+            }
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\Query::build($queryParams);
+        
+        return new Request(
+            'POST',
             $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
             $headers,
             $httpBody

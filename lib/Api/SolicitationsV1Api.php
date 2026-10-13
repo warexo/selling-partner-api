@@ -184,6 +184,7 @@ class SolicitationsV1Api
             $responseBody = $response->getBody();
             switch($statusCode) {
                 case 201:
+                    return true;
                     if ('\SellingPartnerApi\Model\SolicitationsV1\CreateProductReviewAndSellerFeedbackSolicitationResponse' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {

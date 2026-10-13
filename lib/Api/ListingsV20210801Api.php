@@ -559,6 +559,12 @@ class ListingsV20210801Api
         return $response;
     }
 
+    public function searchListingsItems($seller_id, $marketplace_ids, $page_token, $issue_locale = null, $included_data = null, $sort_by= null, $sort_dir = null, $created_before=null, $created_after= null)
+    {
+        $response = $this->searchListingsItemsWithHttpInfo($seller_id, $marketplace_ids, $page_token, $issue_locale, $included_data, $sort_by, $sort_dir, $created_before, $created_after);
+        return $response;
+    }
+
     /**
      * Operation getListingsItemWithHttpInfo
      *
@@ -700,6 +706,217 @@ class ListingsV20210801Api
                 $content = (string) $responseBody;
             }
 
+            return ObjectSerializer::deserialize($content, $returnType, $response->getHeaders());
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\SellingPartnerApi\Model\ListingsV20210801\Item',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\SellingPartnerApi\Model\ListingsV20210801\ErrorList',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\SellingPartnerApi\Model\ListingsV20210801\ErrorList',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\SellingPartnerApi\Model\ListingsV20210801\ErrorList',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 413:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\SellingPartnerApi\Model\ListingsV20210801\ErrorList',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 415:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\SellingPartnerApi\Model\ListingsV20210801\ErrorList',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 429:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\SellingPartnerApi\Model\ListingsV20210801\ErrorList',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\SellingPartnerApi\Model\ListingsV20210801\ErrorList',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 503:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\SellingPartnerApi\Model\ListingsV20210801\ErrorList',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            $this->writeDebug($e);
+            throw $e;
+        }
+    }
+
+    public function searchListingsItemsWithHttpInfo($seller_id, $marketplace_ids, $page_token, $issue_locale = null, $included_data = null, $sort_by = null, $sort_dir=null, $created_before=null, $created_after= null)
+    {
+        $request = $this->searchListingsItemsRequest($seller_id, $marketplace_ids, $page_token, $issue_locale, $included_data, $sort_by, $sort_dir, $created_before, $created_after);
+        $signedRequest = $this->config->signRequest(
+            $request
+        );
+
+        $this->writeDebug($signedRequest);
+        $this->writeDebug((string) $signedRequest->getBody());
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($signedRequest, $options);
+                $this->writeDebug($response);
+                $this->writeDebug((string) $response->getBody());
+            } catch (RequestException $e) {
+                $hasResponse = !empty($e->hasResponse());
+                $body = (string) ($hasResponse ? $e->getResponse()->getBody() : '[NULL response]');
+                $this->writeDebug($e->getResponse());
+                $this->writeDebug($body);
+                throw new ApiException(
+                    "[{$e->getCode()}] {$body}",
+                    $e->getCode(),
+                    $hasResponse ? $e->getResponse()->getHeaders() : [],
+                    $body
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $signedRequest->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()->getContents()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            switch($statusCode) {
+                case 200:
+                    if ('\SellingPartnerApi\Model\ListingsV20210801\Item' === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = (string) $responseBody;
+                    }
+                    return $content;
+                    return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\ListingsV20210801\Item', $response->getHeaders());
+                case 400:
+                    if ('\SellingPartnerApi\Model\ListingsV20210801\ErrorList' === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = (string) $responseBody;
+                    }
+
+                    return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\ListingsV20210801\ErrorList', $response->getHeaders());
+                case 403:
+                    if ('\SellingPartnerApi\Model\ListingsV20210801\ErrorList' === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = (string) $responseBody;
+                    }
+
+                    return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\ListingsV20210801\ErrorList', $response->getHeaders());
+                case 404:
+                    if ('\SellingPartnerApi\Model\ListingsV20210801\ErrorList' === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = (string) $responseBody;
+                    }
+
+                    return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\ListingsV20210801\ErrorList', $response->getHeaders());
+                case 413:
+                    if ('\SellingPartnerApi\Model\ListingsV20210801\ErrorList' === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = (string) $responseBody;
+                    }
+
+                    return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\ListingsV20210801\ErrorList', $response->getHeaders());
+                case 415:
+                    if ('\SellingPartnerApi\Model\ListingsV20210801\ErrorList' === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = (string) $responseBody;
+                    }
+
+                    return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\ListingsV20210801\ErrorList', $response->getHeaders());
+                case 429:
+                    if ('\SellingPartnerApi\Model\ListingsV20210801\ErrorList' === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = (string) $responseBody;
+                    }
+
+                    return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\ListingsV20210801\ErrorList', $response->getHeaders());
+                case 500:
+                    if ('\SellingPartnerApi\Model\ListingsV20210801\ErrorList' === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = (string) $responseBody;
+                    }
+
+                    return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\ListingsV20210801\ErrorList', $response->getHeaders());
+                case 503:
+                    if ('\SellingPartnerApi\Model\ListingsV20210801\ErrorList' === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = (string) $responseBody;
+                    }
+
+                    return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\ListingsV20210801\ErrorList', $response->getHeaders());
+            }
+
+            $returnType = '\SellingPartnerApi\Model\ListingsV20210801\Item';
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = (string) $responseBody;
+            }
+            
+    
             return ObjectSerializer::deserialize($content, $returnType, $response->getHeaders());
 
         } catch (ApiException $e) {
@@ -941,6 +1158,137 @@ class ListingsV20210801Api
                 $resourcePath
             );
         }
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                []
+            );
+        }
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\Query::build($formParams);
+            }
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\Query::build($queryParams);
+        return new Request(
+            'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    public function searchListingsItemsRequest($seller_id, $marketplace_ids, $page_token, $issue_locale = null, $included_data = null, $sort_by = null, $sort_dir=null, $created_before=null, $created_after= null)
+    {
+        
+        // verify the required parameter 'seller_id' is set
+        if ($seller_id === null || (is_array($seller_id) && count($seller_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $seller_id when calling getListingsItem'
+            );
+        }
+        // verify the required parameter 'sku' is set
+        
+        // verify the required parameter 'marketplace_ids' is set
+        if ($marketplace_ids === null || (is_array($marketplace_ids) && count($marketplace_ids) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $marketplace_ids when calling searchListingItems'
+            );
+        }
+
+        $resourcePath = '/listings/2021-08-01/items/{sellerId}';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        if (is_array($marketplace_ids)) {
+            $marketplace_ids = ObjectSerializer::serializeCollection($marketplace_ids, 'form', true);
+        }
+        if ($marketplace_ids !== null) {
+            $queryParams['marketplaceIds'] = $marketplace_ids;
+        }
+
+        // query params
+        if (is_array($issue_locale)) {
+            $issue_locale = ObjectSerializer::serializeCollection($issue_locale, '', true);
+        }
+        if ($issue_locale !== null) {
+            $queryParams['issueLocale'] = $issue_locale;
+        }
+
+        // query params
+        if (is_array($included_data)) {
+            $included_data = ObjectSerializer::serializeCollection($included_data, 'form', true);
+        }
+        if ($included_data !== null) {
+            $queryParams['includedData'] = $included_data;
+        }
+        $queryParams['pageSize'] = 20;
+        if ($page_token != null)
+            $queryParams['pageToken'] = $page_token;
+        if ($sort_by)
+        {
+
+             $queryParams['sortBy'] = $sort_by;
+             $queryParams['sortOrder'] = $sort_dir;
+        }
+        if ($created_before)
+        {
+             $queryParams['createdBefore'] = $created_before;
+        }
+        if ($created_after)
+        {
+             $queryParams['createdAfter'] = $created_after;
+        }
+        // path params
+        if ($seller_id !== null) {
+            $resourcePath = str_replace(
+                '{' . 'sellerId' . '}',
+                ObjectSerializer::toPathValue($seller_id),
+                $resourcePath
+            );
+        }
+    
 
         if ($multipart) {
             $headers = $this->headerSelector->selectHeadersForMultipart(

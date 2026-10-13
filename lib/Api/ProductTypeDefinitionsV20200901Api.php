@@ -128,6 +128,7 @@ class ProductTypeDefinitionsV20200901Api
      */
     public function getDefinitionsProductType($product_type, $marketplace_ids, $seller_id = null, $product_type_version = 'LATEST', $requirements = 'LISTING', $requirements_enforced = 'ENFORCED', $locale = 'DEFAULT')
     {
+       
         $response = $this->getDefinitionsProductTypeWithHttpInfo($product_type, $marketplace_ids, $seller_id, $product_type_version, $requirements, $requirements_enforced, $locale);
         return $response;
     }
@@ -580,6 +581,7 @@ class ProductTypeDefinitionsV20200901Api
         );
 
         $query = \GuzzleHttp\Psr7\Query::build($queryParams);
+        
         return new Request(
             'GET',
             $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
@@ -928,7 +930,7 @@ class ProductTypeDefinitionsV20200901Api
         if ($keywords !== null) {
             $queryParams['keywords'] = $keywords;
         }
-
+        $queryParams['locale'] = 'de_DE';
         // query params
         if (is_array($marketplace_ids)) {
             $marketplace_ids = ObjectSerializer::serializeCollection($marketplace_ids, 'form', true);

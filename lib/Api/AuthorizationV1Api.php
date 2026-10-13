@@ -454,7 +454,7 @@ class AuthorizationV1Api
             );
         }
         // verify the required parameter 'mws_auth_token' is set
-        if ($mws_auth_token === null || (is_array($mws_auth_token) && count($mws_auth_token) === 0)) {
+        if (($mws_auth_token === null || (is_array($mws_auth_token) && count($mws_auth_token) === 0)) && false) {
             throw new \InvalidArgumentException(
                 'Missing the required parameter $mws_auth_token when calling getAuthorizationCode'
             );
